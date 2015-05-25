@@ -3,15 +3,25 @@
 
 {% block content %}
 
-    {# 投稿ボタン #}
-    <a href="{% url 'nippou_app:new' %}">投稿する</a>
+    {# 新規作成ボタン #}
+    <br>
+    <a href="{% url 'nippou_app:new' %}">新規作成</a>
+    <br>
+
+    {# 日報検索ボタン #}
+    <br>
+    <a href="{% url 'nippou_app:search' %}">日報検索</a>
+    <br>
 
     {# 日報のリスト #}
+    <h3>日報一覧</h3>
     {% for nippou in nippous %}
-        <a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a>
+        <p><a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a></P>
     {% endfor %}
+    <br>
 
     {# 最近の投稿 #}
+    <h3>最近の投稿</h3>
     {% for nippou in nippous %}
         <h3>日付</h3>
         {{ nippou.date }}

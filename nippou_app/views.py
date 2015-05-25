@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.views.generic import ListView
 from nippou_app.models import nippou_data
+from django import forms
+from django.db.models import Q
 
 # Create your views here.
 # URLディスパッチャからこのメソッド名を指定して呼ばれる
@@ -103,3 +105,24 @@ def detail(request, id):
     return render_to_response('nippou_app/nippou_detail.html',
                               {'nippou': nippou}, context_instance=RequestContext(request))
     #return HttpResponse('詳細')
+
+class editform(ModelForm):
+    class Meta:
+        model = nippou_data
+        fields = ('title', 'text', 'date')
+
+class NippouSearchForm(forms.Form):
+    keyword = forms.CharField(max_length=100, label='キーワード')
+
+def search(request):
+   form, nippou_ = None, []
+   if request.method == 'GET':
+       form = NippouSearchForm()
+
+   elif request.method == 'POST':
+      form = NippouSearchForm(request.POST)
+      nippous = nippou_data.objects.all()
+      if form.is_valid():
+          nippou_ = nippous.filter(Q(title__contains=form.clean()['keyword']))
+
+   return render_to_response('nippou_app/nippou_search.html', {'form':form, 'nippous':nippou_}, RequestContext(request))

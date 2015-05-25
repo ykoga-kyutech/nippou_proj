@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}日報検索{% endblock title %}
+
+{% block content %}
+
+    {#/search/#}
+    <form action='' method='POST'>
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>
+      <input type="submit" value="検索" />
+    </form>
+
+    {% if nippous %}
+        {% for nippou in nippous %}
+            <p><a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a></P>
+        {% endfor %}
+    {% endif %}
+
+    {# 一覧に戻るボタン #}
+    <a href="{% url 'nippou_app:show' %}"
+           class="btn btn-default btn-sm">戻る</a>
+
+{% endblock content %}

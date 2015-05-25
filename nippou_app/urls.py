@@ -10,5 +10,6 @@ urlpatterns = patterns('',
         url(r'^new/$', views.edit, name='new'),              # 追加
         url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),# 修正
         url(r'^delete/(?P<id>\d+)/$', views.delete, name='delete'),  # 削除
+        url(r'^search/$', views.search, name='search'),        # 検索
         url(r'^profile/$', views.profile, name='profile'),   #
 )
