@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}投稿{% endblock title %}
+
+{% block content %}
+
+    {# 修正 #}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">修正</button>
+    </form>
+
+    {# 一覧に戻るボタン #}
+    <a href="{% url 'nippou_app:show' %}"
+           class="btn btn-default btn-sm">戻る</a>
+
+{% endblock content %}

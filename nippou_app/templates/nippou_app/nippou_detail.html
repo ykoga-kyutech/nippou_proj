@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}詳細{% endblock title %}
+
+{% block content %}
+
+    {# 内容表示 #}
+    <h3>日付</h3>
+    {{ nippou.date }}
+    <h3>タイトル</h3>
+    {{ nippou.title }}
+    <h4>本文</h4>
+    {{ nippou.text }}
+
+    {# 修正ボタン #}
+    <a href="{% url 'nippou_app:edit' id=nippou.id %}"
+           class="btn btn-default btn-sm">修正</a>
+
+    {# 削除ボタン #}
+    <a href="{% url 'nippou_app:delete' id=nippou.id %}"
+           class="btn btn-default btn-sm">削除</a>
+
+{% endblock content %}

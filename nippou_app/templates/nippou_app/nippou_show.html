@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}日報内容{% endblock title %}
+
+{% block content %}
+
+    {# 投稿ボタン #}
+    <a href="{% url 'nippou_app:new' %}">投稿する</a>
+
+    {# 日報のリスト #}
+    {% for nippou in nippous %}
+        <a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a>
+    {% endfor %}
+
+    {# 最近の投稿 #}
+    {% for nippou in nippous %}
+        <h3>日付</h3>
+        {{ nippou.date }}
+        <h3>タイトル</h3>
+        {{ nippou.title }}
+        <h4>本文</h4>
+        {{ nippou.text }}
+    {% endfor %}
+
+{% endblock content %}

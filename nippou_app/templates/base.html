@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}NippouPage{% endblock %}</title>
+</head>
+<body>
+    <p>こんにちは{{name}}</p>
+    {% block content %}
+        {{ content }}
+    {% endblock %}
+</body>
+</html>
