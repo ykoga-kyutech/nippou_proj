@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.views.generic import ListView
 from nippou_app.models import nippou_data
+from nippou_app.models import Task
 from django import forms
 from django.db.models import Q
 
@@ -18,7 +19,14 @@ from django.db.models import Q
 class editform(ModelForm):
     class Meta:
         model = nippou_data
-        fields = ('title', 'text', 'date')
+        #fields = ('title', 'text', 'date')
+        fields = ('title', 'date')
+
+class taskform(ModelForm):
+    class Meta:
+        model = Task
+        fields = ('task_name', 'time_yotei')
+        #, 'time_jitsu', 'task_y', 'task_w', 'task_t'
 
 def edit(request, id=None):
 
@@ -29,19 +37,50 @@ def edit(request, id=None):
     else:
         data = nippou_data()
 
-    #form = None
+    task_data = Task()
+
+    # edit
     if request.method == 'POST':
         form = editform(request.POST, instance=data)
+        ftask = taskform(request.POST, instance=task_data)
+
+        # 完了がおされたら
         if form.is_valid():
             nippou = form.save(commit=False)
             nippou.save()
+            if ftask.is_valid():
+                task = ftask.save(commit=False)
+                # とりあえずの値
+                task.time_jitsu = 0
+                task.task_y = "y"
+                task.task_w = "w"
+                task.task_t = "t"
+                task.save()
             return redirect('nippou_app:show')
+
+        # タスク追加がおされたら
+        if ftask.is_valid():
+            #form =
+            task = ftask.save(commit=False)
+            # とりあえずの値
+            task.time_jitsu = 0
+            task.task_y = "y"
+            task.task_w = "w"
+            task.task_t = "t"
+            task.save()
+            return render_to_response('nippou_app/nippou_edit.html',
+                              {'form': form, 'form_task': ftask, 'id': id},
+                              context_instance=RequestContext(request))
+            #return redirect('nippou_app:new')
+            #return redirect('nippou_app:edit')
         pass
+    # new
     else:
         form = editform(instance=data)
+        ftask = taskform(instance=task_data)
 
     return render_to_response('nippou_app/nippou_edit.html',
-                              {'form': form, 'id': id},
+                              {'form': form, 'form_task': ftask, 'id': id},
                               context_instance=RequestContext(request))
 
     #return HttpResponse('編集')
