@@ -3,3 +3,4 @@
 nippou_proj/__pycache__/
 nippou_app/__pycache__/
 nippou_app/migrations/__pycache__/
+nippou_proj/settings.py
