@@ -25,9 +25,7 @@ class editform(ModelForm):
 class taskform(ModelForm):
     class Meta:
         model = Task
-        fields = ('task_name', 'time_yotei')
-        #, 'time_jitsu', 'task_y', 'task_w', 'task_t'
-
+        fields = ('task_name', 'time_yotei', 'time_jitsu', 'task_y', 'task_w', 'task_t')
 
 @login_required(login_url='/accounts/login')
 def edit(request, id=None):
@@ -47,61 +45,18 @@ def edit(request, id=None):
     # edit
     if request.method == 'POST':
         form = editform(request.POST, instance=data)
-        #ftask = taskform(request.POST, instance=task_data)
 
         # 完了がおされたら
         if form.is_valid():
             nippou = form.save(commit=False)
-            tmp_task = Task(
-            task_name="test_task",
-            time_yotei = 0,
-            time_jitsu = 0,
-            task_y = "y",
-            task_w = "w",
-            task_t = "t")
-            tmp_task.save()
-
-            nippou.task = tmp_task
             nippou.user = request.user
             nippou.save()
-            """
-            if ftask.is_valid():
-                task = ftask.save(commit=False)
-                # とりあえずの値
-                task.time_jitsu = 0
-                task.task_y = "y"
-                task.task_w = "w"
-                task.task_t = "t"
-                task.save()
-          """
             return redirect('nippou_app:show')
-
-        # タスク追加がおされたら
-        """
-        if ftask.is_valid():
-            #form =
-            task = ftask.save(commit=False)
-            # とりあえずの値
-            task.time_jitsu = 0
-            task.task_y = "y"
-            task.task_w = "w"
-            task.task_t = "t"
-            task.save()
-            return render_to_response('nippou_app/nippou_edit.html',
-                              {'form': form, 'form_task': ftask, 'id': id},
-                              context_instance=RequestContext(request))
-            #return redirect('nippou_app:new')
-            #return redirect('nippou_app:edit')
-        """
         pass
     # new
     else:
         form = editform(instance=data)
-        #ftask = taskform(instance=task_data)
 
-    #return render_to_response('nippou_app/nippou_edit.html',
-    #                          {'form': form, 'form_task': ftask, 'id': id},
-    #                          context_instance=RequestContext(request))
     return render_to_response('nippou_app/nippou_edit.html',
                               {'form': form, 'id': id},
                               context_instance=RequestContext(request))
@@ -116,8 +71,10 @@ def delete(request, id=None):
 
 @login_required(login_url='/accounts/login')
 def show(request):
+
     uname = request.user.username
     nippous = nippou_data.objects.all().order_by('date')[:] # show the last N posts
+
     return render_to_response('nippou_app/nippou_show.html',
                               {'nippous': nippous, 'uname': uname}, context_instance=RequestContext(request))
 
@@ -157,6 +114,14 @@ def detail(request, id):
     except nippou_data.DoesNotExist:
         raise Http404
 
+    task_all = Task.objects.all()
+    tasks = []
+    for task in task_all:
+        if task.nippou.id == nippou.id:
+            tasks.append(task)
+        else:
+            pass
+
     # user check
     hide_edit = 0
     if nippou.user != request.user:
@@ -164,7 +129,7 @@ def detail(request, id):
         hide_edit = 1
 
     return render_to_response('nippou_app/nippou_detail.html',
-                              {'nippou': nippou, 'hide_edit':hide_edit}, context_instance=RequestContext(request))
+                              {'nippou': nippou, 'tasks':tasks, 'hide_edit':hide_edit}, context_instance=RequestContext(request))
 
 class NippouSearchForm(forms.Form):
     keyword = forms.CharField(max_length=100, label='キーワード')
@@ -182,3 +147,34 @@ def search(request):
           nippou_ = nippous.filter(Q(title__contains=form.clean()['keyword']))
 
    return render_to_response('nippou_app/nippou_search.html', {'form':form, 'nippous':nippou_}, RequestContext(request))
+
+@login_required(login_url='/accounts/login')
+def taskadd(request, id=None):
+
+    if id:
+        nippou = get_object_or_404(nippou_data, pk=id)
+        # user check
+        if nippou.user != request.user:
+            return redirect('nippou_app:show')
+    # new
+    else:
+        nippou = nippou_data()#ここにあってよい?
+
+    task_data = Task()
+
+    # edit
+    if request.method == 'POST':
+        form = taskform(request.POST, instance=task_data)
+
+        # 完了がおされたら
+        if form.is_valid():
+            task_data.nippou = nippou
+            task = form.save(commit=False)
+            task.save()
+            return redirect('nippou_app:show')
+        pass
+    # new
+    else:
+        form = taskform(instance=task_data)
+
+    return render_to_response('nippou_app/nippou_taskadd.html', {'task_form':form}, RequestContext(request))

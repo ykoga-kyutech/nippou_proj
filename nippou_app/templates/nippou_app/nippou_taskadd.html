@@ -3,17 +3,11 @@
 
 {% block content %}
 
-    {# 修正 #}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">完了</button>
-    </form>
-
+    {# タスク追加 #}
     <br>
     <form action="" method="post">
         {% csrf_token %}
-        {{form_task}}
+        {{ task_form }}
         <button type="submit">タスク追加</button>
     </form>
 

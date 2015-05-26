@@ -26,7 +26,10 @@
     {# 日報のリスト #}
     <h3>日報一覧</h3>
     {% for nippou in nippous %}
-        <p><a href="{% url 'nippou_app:detail' id=nippou.id %}">タイトル：{{ nippou.title }}, ユーザ名：{{ nippou.user.username }}</a></P>
+        <p>
+            <a href="{% url 'nippou_app:detail' id=nippou.id %}">タイトル：{{ nippou.title }}, ユーザ名：{{ nippou.user.username }}</a>
+            <a href="{% url 'nippou_app:taskadd' id=nippou.id　%}">タスク追加</a>
+        </P>
     {% endfor %}
     <br>
 

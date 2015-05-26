@@ -12,4 +12,5 @@ urlpatterns = patterns('',
         url(r'^delete/(?P<id>\d+)/$', views.delete, name='delete'),  # 削除
         url(r'^search/$', views.search, name='search'),        # 検索
         url(r'^profile/$', views.profile, name='profile'),   #
+        url(r'^taskadd/(?P<id>\d+)/$', views.taskadd, name='taskadd'),# タスク追加
 )
