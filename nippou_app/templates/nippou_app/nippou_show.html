@@ -3,6 +3,11 @@
 
 {% block content %}
 
+    {# 挨拶 #}
+    <br>
+    <p>こんにちは！{{uname}}さん
+    <br>
+
     {# 新規作成ボタン #}
     <br>
     <a href="{% url 'nippou_app:new' %}">新規作成</a>
@@ -13,10 +18,15 @@
     <a href="{% url 'nippou_app:search' %}">日報検索</a>
     <br>
 
+    {# ログアウトボタン #}
+    <br>
+    <a href="{% url 'logout' %}">ログアウト</a>
+    <br>
+
     {# 日報のリスト #}
     <h3>日報一覧</h3>
     {% for nippou in nippous %}
-        <p><a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a></P>
+        <p><a href="{% url 'nippou_app:detail' id=nippou.id %}">タイトル：{{ nippou.title }}, ユーザ名：{{ nippou.user.username }}</a></P>
     {% endfor %}
     <br>
 
@@ -25,6 +35,8 @@
     {% for nippou in nippous %}
         <h3>日付</h3>
         {{ nippou.date }}
+        <h3>ユーザ</h3>
+        {{ nippou.user.username }}
         <h3>タイトル</h3>
         {{ nippou.title }}
         <h4>本文</h4>

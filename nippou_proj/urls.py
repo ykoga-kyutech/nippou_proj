@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -23,8 +25,15 @@ urlpatterns = [
     #url(r'^', include('nippou_app.urls', namespace='nippou_app')),#追加
     url(r'^admin/', include(admin.site.urls)),
     url(r'^nippou_app/', include('nippou_app.urls', namespace='nippou_app')),
-    url(r'^nippou_app/accounts/login/', 'django.contrib.auth.views.login', {'template_name': 'nippou_app/login.html'}),
-    #url(r'^nippou_app/accounts/', include('nippou_app.urls', namespace='nippou_app')),
+
+    # ログイン関係 -> nippou_app側に持っていきたい
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'nippou_app/login.html'}, name='login' ),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+        {'template_name': 'nippou_app/logout.html'}, name='logout'),
+    url(r'^$', login_required(TemplateView.as_view
+                             (template_name='nippou_app/nippou_show.html')),
+                               name="show"),  # showでOK?
 ]
 
 urlpatterns += staticfiles_urlpatterns()

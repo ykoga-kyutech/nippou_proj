@@ -10,13 +10,6 @@
         <button type="submit">完了</button>
     </form>
 
-    <br>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{form_task}}
-        <button type="submit">タスク追加</button>
-    </form>
-
     {# 一覧に戻るボタン #}
     <a href="{% url 'nippou_app:show' %}"
            class="btn btn-default btn-sm">戻る</a>
