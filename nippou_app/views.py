@@ -73,7 +73,7 @@ def delete(request, id=None):
 def show(request):
 
     uname = request.user.username
-    nippous = nippou_data.objects.all().order_by('date')[:] # show the last N posts
+    nippous = nippou_data.objects.all().order_by('-date')[:3] # show the last N posts(DESC)
 
     return render_to_response('nippou_app/nippou_show.html',
                               {'nippous': nippous, 'uname': uname}, context_instance=RequestContext(request))

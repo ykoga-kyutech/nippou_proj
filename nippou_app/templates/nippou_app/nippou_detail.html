@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
 {% block title %}詳細{% endblock title %}
 
 {% block content %}
@@ -9,30 +12,43 @@
     {{ nippou.date }}
     <h3>タイトル</h3>
     {{ nippou.title }}
-    <h3>本文</h3>
-    {{ nippou.text }}
     <h3>タスクリスト</h3>
     <p>計{{tasks|length}}タスク</p>
     {% for task in tasks %}
-        <p>・{{ task.task_name }}</p>
+        <div class="row">
+          <div class="col-sm-9">
+            <h3>{{ task.task_name }}</h3>
+            <div class="row">
+              <div class="col-xs-8 col-sm-6">
+                <h3>Y: やったこと</h3>
+                {{ task.task_y }}
+              </div>
+              <div class="col-xs-4 col-sm-6">
+                <h3>W: わかったこと</h3>
+                {{ task.task_w }}
+              </div>
+            </div>
+            <h3>T: 次やること</h3>
+            {{ task.task_t }}
+          </div>
+        </div>
     {% endfor %}
     </p>
 
 
+
+
     {# 修正ボタン #}
     {% if hide_edit == 0 %}
-        <a href="{% url 'nippou_app:edit' id=nippou.id %}"
-               class="btn btn-default btn-sm">修正</a>
+        <a class="btn btn-primary" href="{% url 'nippou_app:edit' id=nippou.id %}" role="button">修正</a>
     {% endif %}
 
     {# 削除ボタン #}
     {% if hide_edit == 0 %}
-        <a href="{% url 'nippou_app:delete' id=nippou.id %}"
-               class="btn btn-default btn-sm">削除</a>
+        <a class="btn btn-danger" href="{% url 'nippou_app:delete' id=nippou.id %}" role="button">削除</a>
     {% endif %}
 
     {# 一覧に戻るボタン #}
-    <a href="{% url 'nippou_app:show' %}"
-           class="btn btn-default btn-sm">戻る</a>
+    <a class="btn btn-default" href="{% url 'nippou_app:show' %}" role="button">戻る</a>
 
 {% endblock content %}

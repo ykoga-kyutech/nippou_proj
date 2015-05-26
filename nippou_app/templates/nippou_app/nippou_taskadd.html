@@ -1,14 +1,16 @@
 {% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
 {% block title %}投稿{% endblock title %}
 
 {% block content %}
 
     {# タスク追加 #}
-    <br>
     <form action="" method="post">
         {% csrf_token %}
-        {{ task_form }}
-        <button type="submit">タスク追加</button>
+        {{ task_form|as_bootstrap }}
+        <input type="submit" value="確定" class="btn btn-primary">
     </form>
 
     {# 一覧に戻るボタン #}

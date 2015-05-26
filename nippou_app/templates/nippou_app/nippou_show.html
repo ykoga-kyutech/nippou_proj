@@ -1,49 +1,87 @@
 {% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
 {% block title %}日報内容{% endblock title %}
 
 {% block content %}
 
     {# 挨拶 #}
-    <br>
-    <p>こんにちは！{{uname}}さん
-    <br>
+    <p>こんにちは！{{uname}}さん</p>
 
     {# 新規作成ボタン #}
-    <br>
-    <a href="{% url 'nippou_app:new' %}">新規作成</a>
-    <br>
+    <a class="btn btn-primary" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報作成</a>
 
-    {# 日報検索ボタン #}
-    <br>
+    {# 日報検索リンク #}
     <a href="{% url 'nippou_app:search' %}">日報検索</a>
-    <br>
 
-    {# ログアウトボタン #}
-    <br>
-    <a href="{% url 'logout' %}">ログアウト</a>
-    <br>
 
     {# 日報のリスト #}
-    <h3>日報一覧</h3>
+    <div>
+    <h3><i class="fa fa-th-list"></i> 日報一覧</h3>
     {% for nippou in nippous %}
         <p>
             <a href="{% url 'nippou_app:detail' id=nippou.id %}">タイトル：{{ nippou.title }}, ユーザ名：{{ nippou.user.username }}</a>
-            <a href="{% url 'nippou_app:taskadd' id=nippou.id　%}">タスク追加</a>
+            <a class="btn btn-default" href="{% url 'nippou_app:taskadd' id=nippou.id　%}"><i class="fa fa-tasks"></i>タスク追加</a>
         </P>
     {% endfor %}
-    <br>
+    </div>
 
     {# 最近の投稿 #}
-    <h3>最近の投稿</h3>
-    {% for nippou in nippous %}
-        <h3>日付</h3>
-        {{ nippou.date }}
-        <h3>ユーザ</h3>
-        {{ nippou.user.username }}
-        <h3>タイトル</h3>
-        {{ nippou.title }}
-        <h4>本文</h4>
-        {{ nippou.text }}
-    {% endfor %}
+    <div>
+    <h3><i class="fa fa-pencil"></i> 最近の投稿</h3>
+        {% for nippou in nippous %}
+            日付:{{ nippou.date }},
+            ユーザ:{{ nippou.user.username }}
+            <h4>タイトル</h4>
+            {{ nippou.title }}
+            <h4>タスク</h4>
+
+            <p>&nbsp;</p>
+        {% endfor %}
+    </div>
+
+<div class="row">
+
+  <div class="col-sm-4">
+      <div class="service">
+        <i class="fa fa-cutlery main-i"></i>
+          <div class="desc"><h3>ランチミーティング</h3></div>
+          <div class=" clear"></div>
+
+          <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
+          <div class="clear"></div>
+        <p><a href="">Shared Plan ACE01や、SmartReleaseを使った活用事例を紹介ください</a></p>
+
+      </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="service">
+          <i class="fa fa-cogs main-i"></i></i>
+      <div class="desc"><h3>CPIプロダクト</h3></div>
+      <div class=" clear"></div>
+
+      <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
+      <div class="clear"></div>
+
+      <p><a href="http://cpi.ad.jp">HDD無制限、データベース無制限、マルチドメイン無制限のレンタルサーバーは3,990円/月〜ご利用いただけます。(CPIサイトに移動)</a></p>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="service">
+      <i class="fa fa-users main-i"></i>
+      <div class="desc"><h3>イベント情報</h3></div>
+      <div class=" clear"></div>
+      <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
+      <div class="clear"></div>
+
+
+      <p><a href="">CPIに関係するイベント・セミナー情報を掲載しています</a></p>
+
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

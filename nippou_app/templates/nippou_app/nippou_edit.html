@@ -1,17 +1,21 @@
 {% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
 {% block title %}投稿{% endblock title %}
 
 {% block content %}
 
     {# 修正 #}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">完了</button>
+    <form action="" method="post" class="form">
+      {% csrf_token %}
+      {{ form|as_bootstrap }}
+      <input type="submit" value="確定" class="btn btn-primary">
     </form>
 
+    <p>&nbsp;</p>
+
     {# 一覧に戻るボタン #}
-    <a href="{% url 'nippou_app:show' %}"
-           class="btn btn-default btn-sm">戻る</a>
+    <a class="btn btn-default" href="{% url 'nippou_app:show' %}" role="button">戻る</a>
 
 {% endblock content %}
