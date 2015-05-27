@@ -10,23 +10,22 @@
     <p>こんにちは！{{uname}}さん</p>
 
     {# 新規作成ボタン #}
-    <a class="btn btn-primary" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報新規作成</a>
-
-    {# 日報検索リンク #}
-    <a href="{% url 'nippou_app:search' %}">日報検索</a>
+    <a class="btn btn-primary btn-lg" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報新規作成</a>
 
     <p>&nbsp;</p>
 
     {# 日報のリスト #}
     <div class="row">
-      <div class="col-md-4">
-        <div class="well well-sm">
+      <div class="col-md-5">
+        <div class="scr_l">
           <div class="service">
-              <div class="desc"><h2><i class="fa fa-th-list"></i>&nbsp;みんなの日報一覧</h2></div>
+              <div class="desc"><h2><i class="fa fa-th-list"></i>&nbsp;みんなの日報一覧</h2>
+              <a href="{% url 'nippou_app:search' %}">他の日報を探す</a></div>
               <div class=" clear"></div>
+              <p>&nbsp;</p>
                 {% for nippou in nippous %}
-                    <h4><i class="fa fa-user"></i> {{ nippou.user.username }}&nbsp;({{nippou.user.user_dev}})&nbsp;&nbsp;  {{ nippou.date }}&nbsp;&nbsp;
-                            <!--<a class="btn btn-info" href="{% url 'nippou_app:detail' id=nippou.id %}">プレビュー</a>-->
+                    <h4><i class="fa fa-user"></i> {{ nippou.user.last_name }}{{ nippou.user.first_name }}&nbsp;
+                        ({{nippou.user.user_dev}})&nbsp;&nbsp; {{ nippou.date }}&nbsp;&nbsp;
                     </h4>
                     <h4>タイトル：&nbsp;<a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a></h4>
                     <p>&nbsp;</p>
@@ -35,40 +34,30 @@
        </div>
       </div>
 
-      <div class="col-md-8">
-        <div class="service">
-          <div class="desc"><h3><i class="fa fa-eye"></i>&nbsp;最新の日報</h3></div>
-          <div class=" clear"></div>
-            {% with nippous|first as first_nippou %}
-            <h4>{{ first_nippou.user.username }}&nbsp;  {{ first_nippou.date }}&nbsp;&nbsp;</h4>
-            <h4>{{ first_nippou.title }}</h4>
-            <p>計{{tasks|length}}タスク</p>
-            {% for task in tasks %}
-                <div class="row">
-                  <div class="col-sm-9">
-                    <h3>{{ task.task_name }}</h3>
-                    <div class="row">
-                      <div class="col-xs-8 col-sm-6">
-                        <div class="well well-sm">
-                        <h3>Y: やったこと</h3>
-                        {{ task.task_y }}
-                      </div>
-                      </div>
-                      <div class="col-xs-4 col-sm-6">
-                        <div class="well well-sm">
-                        <h3>W: わかったこと</h3>
-                        {{ task.task_w }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="well well-sm">
-                    <h3>T: 次やること</h3>
-                    {{ task.task_t }}
-                    </div>
+      <div class="col-md-7">
+        <div class="scr_r">
+            <div class="service">
+              <div class="desc"><h2><i class="fa fa-file-text-o"></i>&nbsp;最近の投稿</h2></div>
+              <div class=" clear"></div>
+                <p>&nbsp;</p>
+                {% for nippou in nippous %}
+                <div class="panel panel-default">
+                  <!-- Default panel contents -->
+                  <div class="panel-heading">
+                      <h4>{{ nippou.user.last_name }}{{ nippou.user.first_name }}&nbsp;({{nippou.user.user_dev}})&nbsp;&nbsp;
+                          {{ nippou.date }}
+                      </h4>
                   </div>
+                  <!-- List group -->
+                  <ul class="list-group">
+                    <li class="list-group-item"><h4>タイトル：{{ nippou.title }}</h4></li>
+                    <li class="list-group-item"><h4>本文：<p>&nbsp;</p>{{ nippou.text|linebreaksbr }}</h4></li>
+                  </ul>
                 </div>
-            {% endfor %}
-            {% endwith %}
+                {% endfor %}
+
+
+            </div>
         </div>
       </div>
     </div>

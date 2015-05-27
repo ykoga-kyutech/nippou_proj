@@ -20,7 +20,7 @@
           <th>日報タイトル</th>
           <th>投稿日時</th>
           <th>タスク</th>
-          <th>操作</th>
+          <th>日報に対する操作</th>
         </tr>
       </thead>
       <tbody>
@@ -29,21 +29,18 @@
           <td>{{ nippou.title }}</td>
           <td>{{ nippou.date }}</td>
           <td>
-              {% if nippou == nippous|last %}
-                  <p>計{{tasks|length}}件 &nbsp;&nbsp;
-                      <a href="{% url 'nippou_app:taskadd' id=nippou.id%}" class="btn btn-default btn-sm">タスク追加</a>
-                  </p>
+              <a href="{% url 'nippou_app:taskadd' id=nippou.id%}" class="btn btn-success btn-sm"><i class="fa fa-tasks fa-lg"></i>タスク追加</a>
+              {% if nippou == nippous|first %}
+              　　<p>合計{{tasks|length}}件</p>
                   {% for task in tasks %}
-                      <p><a href="{% url 'nippou_app:taskedit' id=task.id %}">{{task.task_name}}</a></p>
+                      <h5><a href="{% url 'nippou_app:taskedit' id=task.id %}">{{task.task_name}}</a></h5>
                   {% endfor %}
-              {% else %}
-              <a href="{% url 'nippou_app:taskadd' id=nippou.id%}" class="btn btn-default btn-sm">タスク追加</a>
               {% endif %}
           </td>
           <td>
             <a href="{% url 'nippou_app:make' id=nippou.id %}" class="btn btn-primary btn-sm">日報自動作成</a>
             <a href="{% url 'nippou_app:detail' id=nippou.id　%}" class="btn btn-default btn-sm">詳細</a>
-            <a href="{% url 'nippou_app:edit' id=nippou.id %}" class="btn btn-default btn-sm">修正</a>
+            <a href="{% url 'nippou_app:edit' id=nippou.id %}" class="btn btn-default btn-sm">修正</a> &nbsp;&nbsp;&nbsp;
             <a href="{% url 'nippou_app:delete' id=nippou.id %}" class="btn btn-danger btn-sm">削除</a>
           </td>
         </tr>

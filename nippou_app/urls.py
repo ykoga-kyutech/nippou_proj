@@ -12,7 +12,9 @@ urlpatterns = patterns('',
         url(r'^delete/(?P<id>\d+)/$', views.delete, name='delete'),  # 削除
         url(r'^search/$', views.search, name='search'),        # 検索
         url(r'^mypage/$', views.mypage, name='mypage'),   # マイページ
+
         url(r'^taskadd/(?P<id>\d+)/$', views.taskadd, name='taskadd'),# タスク追加
         url(r'^taskedit/(?P<id>\d+)/$', views.taskedit, name='taskedit'),# タスク修正
+        url(r'^taskdelete/(?P<id>\d+)/$', views.taskdelete, name='taskdelete'),# タスク削除
         url(r'^make/(?P<id>\d+)/$', views.make, name='make'),#
 )

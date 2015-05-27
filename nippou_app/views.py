@@ -11,21 +11,29 @@ from django import forms
 from django.db.models import Q
 
 # Create your views here.
-# URLディスパッチャからこのメソッド名を指定して呼ばれる
-# nippou_app\urls.py内でviews.メソッド名の形で呼ばれる
-# ここでDBからもらった情報をテンプレに流し込む
-
-
-class editform(ModelForm):
+class NippouEditForm(ModelForm):
     class Meta:
         model = nippou_data
-        #fields = ('title', 'text', 'date')
         fields = ('title', 'date', 'text')
+        widgets = {
+          'title': forms.TextInput(attrs={'size': '100'}),
+          'text': forms.Textarea(attrs={'rows':20, 'cols':100}),
+        }
 
-class taskform(ModelForm):
+class TaskEditForm(ModelForm):
     class Meta:
         model = Task
         fields = ('task_name', 'time_yotei', 'time_jitsu', 'task_y', 'task_w', 'task_t')
+        widgets = {
+          'task_name': forms.TextInput(attrs={'size': '100'}),
+          'task_y': forms.Textarea(attrs={'rows':10, 'cols':100}),
+          'task_w': forms.Textarea(attrs={'rows':10, 'cols':100}),
+          'task_t': forms.Textarea(attrs={'rows':10, 'cols':100}),
+        }
+
+
+class NippouSearchForm(forms.Form):
+    keyword = forms.CharField(max_length=100, label='キーワード')
 
 @login_required(login_url='/accounts/login')
 def edit(request, id=None):
@@ -35,7 +43,7 @@ def edit(request, id=None):
         data = get_object_or_404(nippou_data, pk=id)
         # user check
         if data.user != request.user:
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
     # new
     else:
         data = nippou_data()
@@ -44,18 +52,18 @@ def edit(request, id=None):
 
     # edit
     if request.method == 'POST':
-        form = editform(request.POST, instance=data)
+        form = NippouEditForm(request.POST, instance=data)
 
         # 完了がおされたら
         if form.is_valid():
             nippou = form.save(commit=False)
             nippou.user = request.user
             nippou.save()
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
         pass
     # new
     else:
-        form = editform(instance=data)
+        form = NippouEditForm(instance=data)
 
     return render_to_response('nippou_app/nippou_edit.html',
                               {'form': form, 'id': id},
@@ -72,7 +80,7 @@ def delete(request, id=None):
 @login_required(login_url='/accounts/login')
 def show(request):
 
-    uname = request.user.username
+    #uname = request.user.username
     nippou = nippou_data.objects.all().order_by('-date')[0] # show the last N posts(DESC)
     nippous = nippou_data.objects.all().order_by('-date')[:]
 
@@ -84,20 +92,21 @@ def show(request):
             tasks.append(task)
 
     return render_to_response('nippou_app/nippou_show.html',
-                              {'nippous': nippous, 'tasks':tasks, 'uname': uname}, context_instance=RequestContext(request))
+                              {'nippous': nippous, 'tasks':tasks, 'uname': nippou.user.last_name+nippou.user.first_name},
+                              context_instance=RequestContext(request))
 
 @login_required(login_url='/accounts/login')
 def mypage(request):
 
-    uname = request.user.username
+    #uname = request.user.username
     nippous_tmp = nippou_data.objects.all().order_by('-date')[:]
 
     nippous = []
     for nippou in nippous_tmp:
         # user check
-        if nippou.user != request.user:
-            continue
-        nippous.append(nippou)
+        if nippou.user == request.user:
+            nippous.append(nippou)
+    nippou = nippous[0]
 
     task_all = Task.objects.all()
 
@@ -105,11 +114,9 @@ def mypage(request):
     for task in task_all:
         if task.nippou.id == nippou.id:
             tasks.append(task)
-        else:
-            pass
 
     return render_to_response('nippou_app/mypage.html',
-                              {'nippous': nippous, 'tasks': tasks, 'uname': uname},
+                              {'nippous': nippous, 'tasks': tasks, 'uname': nippou.user.last_name+nippou.user.first_name},
                               context_instance=RequestContext(request))
 
 """
@@ -159,9 +166,6 @@ def detail(request, id):
     return render_to_response('nippou_app/nippou_detail.html',
                               {'nippou': nippou, 'tasks':tasks, 'hide_edit':hide_edit}, context_instance=RequestContext(request))
 
-class NippouSearchForm(forms.Form):
-    keyword = forms.CharField(max_length=100, label='キーワード')
-
 @login_required(login_url='/accounts/login')
 def search(request):
    form, nippou_ = None, []
@@ -183,7 +187,7 @@ def taskadd(request, id=None):
         nippou = get_object_or_404(nippou_data, pk=id)
         # user check
         if nippou.user != request.user:
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
     # new
     else:
         nippou = nippou_data()#ここにあってよい?
@@ -192,18 +196,18 @@ def taskadd(request, id=None):
 
     # edit
     if request.method == 'POST':
-        form = taskform(request.POST, instance=task)
+        form = TaskEditForm(request.POST, instance=task)
 
         # 完了がおされたら
         if form.is_valid():
             task.nippou = nippou
             task = form.save(commit=False)
             task.save()
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
         pass
     # new
     else:
-        form = taskform(instance=task)
+        form = TaskEditForm(instance=task)
 
     return render_to_response('nippou_app/nippou_taskadd.html', {'task_form':form}, RequestContext(request))
 
@@ -220,21 +224,28 @@ def taskedit(request, id=None):
 
     # edit
     if request.method == 'POST':
-        form = taskform(request.POST, instance=task)
+        form = TaskEditForm(request.POST, instance=task)
 
         # 完了がおされたら
         if form.is_valid():
             task = form.save(commit=False)
             task.save()
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
         pass
     # new
     else:
-        form = taskform(instance=task)
-
-    return render_to_response('nippou_app/nippou_edit.html',
+        form = TaskEditForm(instance=task)
+    return render_to_response('nippou_app/nippou_taskedit.html',
                               {'form': form, 'id': id},
                               context_instance=RequestContext(request))
+
+@login_required(login_url='/accounts/login')
+def taskdelete(request, id=None):
+
+    task = get_object_or_404(Task, pk=id)
+    task.delete()
+    #ここで確認を入れたい
+    return redirect('nippou_app:mypage')
 
 @login_required(login_url='/accounts/login')
 def make(request, id=None):
@@ -259,6 +270,11 @@ def make(request, id=None):
     nippou_text = nippou.text
 
     nippou_text += "\n#### 以下、自動作成結果 ####\n"
+
+    nippou_text += "\n・計画\n"
+    for task in tasks:
+        nippou_text += task.task_name+"\n"
+
     nippou_text += "\n・やったこと\n"
     for task in tasks:
         nippou_text += task.task_y+"\n"
@@ -275,19 +291,18 @@ def make(request, id=None):
 
     # edit
     if request.method == 'POST':
-        form = editform(request.POST, instance=nippou)
+        form = NippouEditForm(request.POST, instance=nippou)
 
         # 完了がおされたら
         if form.is_valid():
             nippou = form.save(commit=False)
             nippou.save()
-            print("save")
-            return redirect('nippou_app:show')
+            return redirect('nippou_app:mypage')
         pass
     # new
     else:
         nippou.text = nippou_text
-        form = editform(instance=nippou)
+        form = NippouEditForm(instance=nippou)
         print("get")
 
     return render_to_response('nippou_app/nippou_edit.html',
