@@ -10,78 +10,67 @@
     <p>こんにちは！{{uname}}さん</p>
 
     {# 新規作成ボタン #}
-    <a class="btn btn-primary" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報作成</a>
+    <a class="btn btn-primary" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報新規作成</a>
 
     {# 日報検索リンク #}
     <a href="{% url 'nippou_app:search' %}">日報検索</a>
 
+    <p>&nbsp;</p>
 
     {# 日報のリスト #}
-    <div>
-    <h3><i class="fa fa-th-list"></i> 日報一覧</h3>
-    {% for nippou in nippous %}
-        <p>
-            <a href="{% url 'nippou_app:detail' id=nippou.id %}">タイトル：{{ nippou.title }}, ユーザ名：{{ nippou.user.username }}</a>
-            <a class="btn btn-default" href="{% url 'nippou_app:taskadd' id=nippou.id　%}"><i class="fa fa-tasks"></i>タスク追加</a>
-        </P>
-    {% endfor %}
-    </div>
-
-    {# 最近の投稿 #}
-    <div>
-    <h3><i class="fa fa-pencil"></i> 最近の投稿</h3>
-        {% for nippou in nippous %}
-            日付:{{ nippou.date }},
-            ユーザ:{{ nippou.user.username }}
-            <h4>タイトル</h4>
-            {{ nippou.title }}
-            <h4>タスク</h4>
-
-            <p>&nbsp;</p>
-        {% endfor %}
-    </div>
-
-<div class="row">
-
-  <div class="col-sm-4">
-      <div class="service">
-        <i class="fa fa-cutlery main-i"></i>
-          <div class="desc"><h3>ランチミーティング</h3></div>
-          <div class=" clear"></div>
-
-          <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
-          <div class="clear"></div>
-        <p><a href="">Shared Plan ACE01や、SmartReleaseを使った活用事例を紹介ください</a></p>
-
+    <div class="row">
+      <div class="col-md-4">
+        <div class="well well-sm">
+          <div class="service">
+              <div class="desc"><h2><i class="fa fa-th-list"></i>&nbsp;みんなの日報一覧</h2></div>
+              <div class=" clear"></div>
+                {% for nippou in nippous %}
+                    <h4><i class="fa fa-user"></i> {{ nippou.user.username }}&nbsp;({{nippou.user.user_dev}})&nbsp;&nbsp;  {{ nippou.date }}&nbsp;&nbsp;
+                            <!--<a class="btn btn-info" href="{% url 'nippou_app:detail' id=nippou.id %}">プレビュー</a>-->
+                    </h4>
+                    <h4>タイトル：&nbsp;<a href="{% url 'nippou_app:detail' id=nippou.id %}">{{ nippou.title }}</a></h4>
+                    <p>&nbsp;</p>
+                {% endfor %}
+          </div>
+       </div>
       </div>
-  </div>
 
-  <div class="col-sm-4">
-    <div class="service">
-          <i class="fa fa-cogs main-i"></i></i>
-      <div class="desc"><h3>CPIプロダクト</h3></div>
-      <div class=" clear"></div>
-
-      <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
-      <div class="clear"></div>
-
-      <p><a href="http://cpi.ad.jp">HDD無制限、データベース無制限、マルチドメイン無制限のレンタルサーバーは3,990円/月〜ご利用いただけます。(CPIサイトに移動)</a></p>
+      <div class="col-md-8">
+        <div class="service">
+          <div class="desc"><h3><i class="fa fa-eye"></i>&nbsp;最新の日報</h3></div>
+          <div class=" clear"></div>
+            {% with nippous|first as first_nippou %}
+            <h4>{{ first_nippou.user.username }}&nbsp;  {{ first_nippou.date }}&nbsp;&nbsp;</h4>
+            <h4>{{ first_nippou.title }}</h4>
+            <p>計{{tasks|length}}タスク</p>
+            {% for task in tasks %}
+                <div class="row">
+                  <div class="col-sm-9">
+                    <h3>{{ task.task_name }}</h3>
+                    <div class="row">
+                      <div class="col-xs-8 col-sm-6">
+                        <div class="well well-sm">
+                        <h3>Y: やったこと</h3>
+                        {{ task.task_y }}
+                      </div>
+                      </div>
+                      <div class="col-xs-4 col-sm-6">
+                        <div class="well well-sm">
+                        <h3>W: わかったこと</h3>
+                        {{ task.task_w }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="well well-sm">
+                    <h3>T: 次やること</h3>
+                    {{ task.task_t }}
+                    </div>
+                  </div>
+                </div>
+            {% endfor %}
+            {% endwith %}
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="col-sm-4">
-    <div class="service">
-      <i class="fa fa-users main-i"></i>
-      <div class="desc"><h3>イベント情報</h3></div>
-      <div class=" clear"></div>
-      <div class="enimg"><img src="./img200.png" alt="img" width="200px" class="enimg" /></div>
-      <div class="clear"></div>
-
-
-      <p><a href="">CPIに関係するイベント・セミナー情報を掲載しています</a></p>
-
-    </div>
-  </div>
-</div>
 
 {% endblock content %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load bootstrap_toolkit %}
+
+{% block title %}マイページ{% endblock title %}
+
+{% block content %}
+
+    <h2>{{uname}}さんのマイページ</h2>
+
+    {# 新規作成ボタン #}
+    <a class="btn btn-primary" href="{% url 'nippou_app:new' %}"><i class="fa fa-pencil-square fa-lg"></i> 日報新規作成</a>
+
+    <p>&nbsp;</p>
+
+    {# 日報テーブル #}
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>日報タイトル</th>
+          <th>投稿日時</th>
+          <th>タスク</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nippou in nippous %}
+        <tr>
+          <td>{{ nippou.title }}</td>
+          <td>{{ nippou.date }}</td>
+          <td>
+              {% if nippou == nippous|last %}
+                  <p>計{{tasks|length}}件 &nbsp;&nbsp;
+                      <a href="{% url 'nippou_app:taskadd' id=nippou.id%}" class="btn btn-default btn-sm">タスク追加</a>
+                  </p>
+                  {% for task in tasks %}
+                      <p><a href="{% url 'nippou_app:taskedit' id=task.id %}">{{task.task_name}}</a></p>
+                  {% endfor %}
+              {% else %}
+              <a href="{% url 'nippou_app:taskadd' id=nippou.id%}" class="btn btn-default btn-sm">タスク追加</a>
+              {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'nippou_app:make' id=nippou.id %}" class="btn btn-primary btn-sm">日報自動作成</a>
+            <a href="{% url 'nippou_app:detail' id=nippou.id　%}" class="btn btn-default btn-sm">詳細</a>
+            <a href="{% url 'nippou_app:edit' id=nippou.id %}" class="btn btn-default btn-sm">修正</a>
+            <a href="{% url 'nippou_app:delete' id=nippou.id %}" class="btn btn-danger btn-sm">削除</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+{% endblock content %}

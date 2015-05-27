@@ -13,7 +13,7 @@
 
         <!--アイコン関係：http://fortawesome.github.io/Font-Awesome/examples/-->
         <!-- http://fortawesome.github.io/Font-Awesome/cheatsheet/ -->
-        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <!--link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"-->
     </head>
 
     <body>
@@ -25,14 +25,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">日報アプリタイトル</a>
+              <a class="navbar-brand" href="{% url 'nippou_app:show' %}">タスク de 日報</a>
             </div>
             <div class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
               <li><a href="{% url 'nippou_app:show' %}">
                   <i class="fa fa-home"></i> ホーム</a></li>
-              <li><a href="{% url 'nippou_app:show' %}">
-                  <i class="fa fa-info"></i> マイページ(未実装)</a></li>
+              <li><a href="{% url 'nippou_app:mypage' %}">
+                  <i class="fa fa-info"></i> マイページ</a></li>
               </ul>
 
               <ul class="nav navbar-nav navbar-right">

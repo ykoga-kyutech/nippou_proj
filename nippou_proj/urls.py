@@ -21,9 +21,14 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
-    #url('^', include('django.contrib.auth.urls')),
-    #url(r'^', include('nippou_app.urls', namespace='nippou_app')),#追加
+
+    # ルート
+    url(r'^', include('nippou_app.urls', namespace='nippou_app')),
+
+    # 管理画面
     url(r'^admin/', include(admin.site.urls)),
+
+    # アプリ関係
     url(r'^nippou_app/', include('nippou_app.urls', namespace='nippou_app')),
 
     # ログイン関係 -> nippou_app側に持っていきたい
@@ -31,9 +36,9 @@ urlpatterns = [
         {'template_name': 'nippou_app/login.html'}, name='login' ),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'template_name': 'nippou_app/logout.html'}, name='logout'),
-    url(r'^$', login_required(TemplateView.as_view
-                             (template_name='nippou_app/nippou_show.html')),
-                               name="show"),  # showでOK?
+    #url(r'^$', login_required(TemplateView.as_view
+    #                         (template_name='nippou_app/login.html')),
+    #                           name="a"),  # showでOK?
 ]
 
 urlpatterns += staticfiles_urlpatterns()
