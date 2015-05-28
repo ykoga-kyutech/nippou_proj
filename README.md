@@ -31,6 +31,9 @@ Python 3.4.2?
 Django 1.8.4?
 PostgreSQL x.x.x?
 
+Pythonモジュール
+psycopg2（PostgresSQLのドライバ）
+
 
 実行準備
 ===========

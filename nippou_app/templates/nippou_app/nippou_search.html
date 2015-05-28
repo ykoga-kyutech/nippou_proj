@@ -7,7 +7,7 @@
 {% block content %}
 
     {#　検索　#}
-    <p>キーワードに部分合致する日報タイトルを検索します</p>
+    <p>キーワードに合致する日報タイトル・本文を検索します</p>
     <form action="" method="post" class="form">
       {% csrf_token %}
       {{ form|as_bootstrap }}

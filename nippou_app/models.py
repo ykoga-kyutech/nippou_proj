@@ -8,19 +8,19 @@ class User(AbstractUser):
 
 class nippou_data(models.Model):
     user = models.ForeignKey(User)
-    title = models.CharField(max_length=512)
-    text = models.TextField()
-    date = models.DateTimeField(default=datetime.now)
+    title = models.CharField('タイトル', max_length=512)
+    text = models.TextField('本文')
+    date = models.DateTimeField('投稿日時', default=datetime.now)
 
 class Task(models.Model):
 
     nippou = models.ForeignKey(nippou_data)
-    task_name = models.CharField(max_length=512)
-    time_yotei = models.IntegerField()
-    time_jitsu = models.IntegerField()
-    task_y = models.TextField()
-    task_w = models.TextField()
-    task_t = models.TextField()
+    task_name = models.CharField('タスク名', max_length=512)
+    time_yotei = models.IntegerField('予定時間')
+    time_jitsu = models.IntegerField('実時間')
+    task_y = models.TextField('Y:やったこと')
+    task_w = models.TextField('W:わかったこと')
+    task_t = models.TextField('T:次やること')
 
 """
 class User(models.Model):

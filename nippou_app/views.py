@@ -21,11 +21,12 @@ class NippouEditForm(ModelForm):
         }
 
 class TaskEditForm(ModelForm):
+
     class Meta:
         model = Task
         fields = ('task_name', 'time_yotei', 'time_jitsu', 'task_y', 'task_w', 'task_t')
         widgets = {
-          'task_name': forms.TextInput(attrs={'size': '100'}),
+          'task_name': forms.TextInput(attrs={'size': '100', 'label':'タスク名'}),
           'task_y': forms.Textarea(attrs={'rows':10, 'cols':100}),
           'task_w': forms.Textarea(attrs={'rows':10, 'cols':100}),
           'task_t': forms.Textarea(attrs={'rows':10, 'cols':100}),
@@ -92,7 +93,7 @@ def show(request):
             tasks.append(task)
 
     return render_to_response('nippou_app/nippou_show.html',
-                              {'nippous': nippous, 'tasks':tasks, 'uname': nippou.user.last_name+nippou.user.first_name},
+                              {'nippous': nippous, 'tasks':tasks, 'uname': request.user.last_name+request.user.first_name},
                               context_instance=RequestContext(request))
 
 @login_required(login_url='/accounts/login')
@@ -116,7 +117,7 @@ def mypage(request):
             tasks.append(task)
 
     return render_to_response('nippou_app/mypage.html',
-                              {'nippous': nippous, 'tasks': tasks, 'uname': nippou.user.last_name+nippou.user.first_name},
+                              {'nippous': nippous, 'tasks': tasks, 'uname': request.user.last_name+request.user.first_name},
                               context_instance=RequestContext(request))
 
 """
@@ -176,7 +177,9 @@ def search(request):
       form = NippouSearchForm(request.POST)
       nippous = nippou_data.objects.all()
       if form.is_valid():
-          nippou_ = nippous.filter(Q(title__contains=form.clean()['keyword']))
+          nippou_ = list(nippous.filter(Q(title__contains=form.clean()['keyword']))) #title
+          nippou_.extend(nippous.filter(Q(text__contains=form.clean()['keyword']))) #text
+          #nippou_.extend(nippous.filter(Q(user__contains=form.clean()['keyword']))) #user # error
 
    return render_to_response('nippou_app/nippou_search.html', {'form':form, 'nippous':nippou_}, RequestContext(request))
 

@@ -6,29 +6,13 @@
 
 {% block content %}
 
-    {# ここでスタイルを書いて良いのか？ #}
-    <STYLE type="text/css">
-        .scr_l {
-          overflow: scroll;
-          width: 550px;
-          height: 600px;
-          background-color: white;
-        }
-        .scr_r {
-          overflow: scroll;
-          width: 550px;
-          height: 600px;
-          background-color: white;
-        }
-    </STYLE>
-
     {# 内容表示 #}
     <div class="row">
       <div class="col-md-6">
-        <div class="scr_l">
           <h2>日報詳細</h2>
             <div class="service">
-              <div class="panel panel-default">
+                <p>&nbsp;</p>
+                <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
                     <h4>{{ nippou.user.last_name }}{{ nippou.user.first_name }}&nbsp;({{nippou.user.user_dev}})&nbsp;&nbsp;
@@ -42,30 +26,26 @@
                 </ul>
             </div>
           </div>
-       </div>
       </div>
 
         <div class="col-md-6">
-        <div class="scr_r">
             <h2>タスク詳細</h2>
             <p>合計{{tasks|length}}タスク</p>
             <div class="service">
                 {% for task in tasks %}
                     <div class="panel panel-default">
                       <!-- Default panel contents -->
-                      <div class="panel-heading"><h4>タスク名：{{ task.task_name }}</h4></div>
+                      <div class="panel-heading"><h4>{{ task.task_name }}</h4></div>
                       <!-- List group -->
                       <ul class="list-group">
-                        <li class="list-group-item"><h4>P: 計画</h4> <p>&nbsp;</p>{{ task.task_name }}</li>
-                        <li class="list-group-item"><h4>Y: やったこと</h4> <p>&nbsp;</p>{{ task.task_y }}</li>
-                        <li class="list-group-item"><h4>W: わかったこと</h4><p>&nbsp;</p>{{ task.task_w }}</li>
-                        <li class="list-group-item"><h4>T: 次やること</h4><p>&nbsp;</p>{{ task.task_t }}</li>
+                        <li class="list-group-item"><h4>Y: やったこと<p>&nbsp;</p>{{ task.task_y }}</h4> </li>
+                        <li class="list-group-item"><h4>W: わかったこと<p>&nbsp;</p>{{ task.task_w }}</h4></li>
+                        <li class="list-group-item"><h4>T: 次やること<p>&nbsp;</p>{{ task.task_t }}</h4></li>
                       </ul>
                     </div>
                 {% endfor %}
             </div>
         </div>
-      </div>
     </div>
 
     <p>&nbsp;</p>
