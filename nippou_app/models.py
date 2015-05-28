@@ -11,6 +11,7 @@ class nippou_data(models.Model):
     title = models.CharField('タイトル', max_length=512)
     text = models.TextField('本文')
     date = models.DateTimeField('投稿日時', default=datetime.now)
+    open = models.BooleanField('公開', default=False)
 
 class Task(models.Model):
 

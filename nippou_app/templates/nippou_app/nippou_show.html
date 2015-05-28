@@ -14,8 +14,8 @@
 
     <p>&nbsp;</p>
 
-    {# 日報のリスト #}
     <div class="row">
+      {# 日報一覧 #}
       <div class="col-md-5">
         <div class="scr_l">
           <div class="service">
@@ -34,12 +34,12 @@
        </div>
       </div>
 
+      {# 最近の投稿 #}
       <div class="col-md-7">
         <div class="scr_r">
             <div class="service">
               <div class="desc"><h2><i class="fa fa-file-text-o"></i>&nbsp;最近の投稿</h2></div>
               <div class=" clear"></div>
-                <p>&nbsp;</p>
                 {% for nippou in nippous %}
                 <div class="panel panel-default">
                   <!-- Default panel contents -->
@@ -55,8 +55,6 @@
                   </ul>
                 </div>
                 {% endfor %}
-
-
             </div>
         </div>
       </div>

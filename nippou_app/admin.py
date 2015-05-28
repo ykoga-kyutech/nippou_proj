@@ -6,8 +6,8 @@ import nippou_app
 
 # Register your models here.
 class nippou_dataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'date','user', 'text',)
-    list_display_links = ('id', 'title','date','user', 'text')
+    list_display = ('id', 'title', 'date','user', 'text', 'open')
+    list_display_links = ('id', 'title','date','user', 'text', 'open')
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('nippou', 'task_name', 'time_yotei', 'time_jitsu','task_y', 'task_w', 'task_t',)

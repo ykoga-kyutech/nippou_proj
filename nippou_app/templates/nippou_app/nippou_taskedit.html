@@ -1,6 +1,6 @@
 {% extends "nippou_app/nippou_edit.html" %}
 
-{% load bootstrap_toolkit %}
+{% load bootstrap %}
 
 {% block title %}投稿{% endblock title %}
 
@@ -9,7 +9,7 @@
     {# 修正 #}
     <form action="" method="post" class="form">
       {% csrf_token %}
-      {{ form|as_bootstrap }}
+      {{ form|bootstrap }}
       <input type="submit" value="確定" class="btn btn-primary">&nbsp;
       <a class="btn btn-danger" href="{% url 'nippou_app:taskdelete' id=id %}" role="button">削除</a>
     </form>

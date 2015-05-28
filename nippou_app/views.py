@@ -14,7 +14,7 @@ from django.db.models import Q
 class NippouEditForm(ModelForm):
     class Meta:
         model = nippou_data
-        fields = ('title', 'date', 'text')
+        fields = ('title', 'date', 'text', 'open')
         widgets = {
           'title': forms.TextInput(attrs={'size': '100'}),
           'text': forms.Textarea(attrs={'rows':20, 'cols':100}),
@@ -26,7 +26,7 @@ class TaskEditForm(ModelForm):
         model = Task
         fields = ('task_name', 'time_yotei', 'time_jitsu', 'task_y', 'task_w', 'task_t')
         widgets = {
-          'task_name': forms.TextInput(attrs={'size': '100', 'label':'タスク名'}),
+          'task_name': forms.TextInput(attrs={'size': '100'}),
           'task_y': forms.Textarea(attrs={'rows':10, 'cols':100}),
           'task_w': forms.Textarea(attrs={'rows':10, 'cols':100}),
           'task_t': forms.Textarea(attrs={'rows':10, 'cols':100}),
@@ -59,6 +59,7 @@ def edit(request, id=None):
         if form.is_valid():
             nippou = form.save(commit=False)
             nippou.user = request.user
+            nippou.open = form.cleaned_data['open']
             nippou.save()
             return redirect('nippou_app:mypage')
         pass
@@ -73,27 +74,23 @@ def edit(request, id=None):
 @login_required(login_url='/accounts/login')
 def delete(request, id=None):
 
-    nippou = get_object_or_404(nippou_data, pk=id)
-    nippou.delete()
+    try:
+        nippou = get_object_or_404(nippou_data, pk=id)
+        nippou.delete()
+    except nippou_data.DoesNotExist:
+        raise Http404
     #ここで確認を入れたい
     return redirect('nippou_app:mypage')
 
 @login_required(login_url='/accounts/login')
 def show(request):
 
-    #uname = request.user.username
-    nippou = nippou_data.objects.all().order_by('-date')[0] # show the last N posts(DESC)
-    nippous = nippou_data.objects.all().order_by('-date')[:]
-
-    task_all = Task.objects.all()
-
-    tasks = []
-    for task in task_all:
-        if task.nippou.id == nippou.id:
-            tasks.append(task)
+    #公開にチェックがはいっているもののみ最新のものから順に表示
+    nippous_tmp = nippou_data.objects.all().order_by('-date')[:]
+    nippous = list(filter(lambda x: x.open==True, nippous_tmp))
 
     return render_to_response('nippou_app/nippou_show.html',
-                              {'nippous': nippous, 'tasks':tasks, 'uname': request.user.last_name+request.user.first_name},
+                              {'nippous': nippous, 'uname': request.user.last_name+request.user.first_name},
                               context_instance=RequestContext(request))
 
 @login_required(login_url='/accounts/login')

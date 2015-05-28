@@ -16,7 +16,8 @@
                 <!-- Default panel contents -->
                 <div class="panel-heading">
                     <h4>{{ nippou.user.last_name }}{{ nippou.user.first_name }}&nbsp;({{nippou.user.user_dev}})&nbsp;&nbsp;
-                        {{ nippou.date }}
+                        {{ nippou.date }}&nbsp;
+                        {% if nippou.open %} 公開 {% else %}<font color="#DD0000">下書き</font>{% endif %}
                     </h4>
                 </div>
                 <!-- List group -->
@@ -27,10 +28,10 @@
             </div>
           </div>
       </div>
-
+        {% if hide_edit == 0 %}
         <div class="col-md-6">
             <h2>タスク詳細</h2>
-            <p>合計{{tasks|length}}タスク</p>
+            <p>合計{{tasks|length}}タスク&nbsp;※タスクは自分以外非公開です</p>
             <div class="service">
                 {% for task in tasks %}
                     <div class="panel panel-default">
@@ -46,6 +47,7 @@
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
     </div>
 
     <p>&nbsp;</p>
@@ -64,7 +66,5 @@
 
     {# 一覧に戻るボタン #}
     <a class="btn btn-default" href="{% url 'nippou_app:mypage' %}" role="button">戻る</a>
-
-    <p>&nbsp;</p>
 
 {% endblock content %}

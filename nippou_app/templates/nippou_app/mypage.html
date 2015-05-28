@@ -17,6 +17,7 @@
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
+          <th>状態</th>
           <th>日報タイトル</th>
           <th>投稿日時</th>
           <th>タスク</th>
@@ -26,6 +27,11 @@
       <tbody>
         {% for nippou in nippous %}
         <tr>
+          {%if nippou.open %}
+            <td><i class="fa fa-eye fa-lg"></i>公開</td>
+          {% else %}
+            <td><i class="fa fa-pencil fa-lg"></i>下書き</td>
+          {% endif %}
           <td>{{ nippou.title }}</td>
           <td>{{ nippou.date }}</td>
           <td>
