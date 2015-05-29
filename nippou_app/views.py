@@ -1,10 +1,7 @@
 from django.shortcuts import render_to_response, redirect, get_object_or_404
-from django.http import HttpResponse, Http404
 from django.template import RequestContext
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
-from django.views.generic import ListView
 from nippou_app.models import nippou_data
 from nippou_app.models import Task, User
 from django import forms
@@ -38,13 +35,16 @@ class NippouSearchForm(forms.Form):
 
 @login_required(login_url='/accounts/login')
 def edit(request, id=None):
-
+    """
+    日報を新規作成、または指定された日報を編集する
+    """
     # edit
     if id:
         data = get_object_or_404(nippou_data, pk=id)
         # user check
         if data.user != request.user:
-            return redirect('nippou_app:mypage')
+            print("不正なアクセスです！")
+            return redirect('nippou_app:show')
     # new
     else:
         data = nippou_data()
@@ -73,17 +73,27 @@ def edit(request, id=None):
 
 @login_required(login_url='/accounts/login')
 def delete(request, id=None):
+    """
+    指定された日報を削除する
+    """
+    nippou = get_object_or_404(nippou_data, pk=id)
 
-    try:
-        nippou = get_object_or_404(nippou_data, pk=id)
+    # user check
+    if nippou.user == request.user:
+        #ここで確認を入れたい
         nippou.delete()
-    except nippou_data.DoesNotExist:
-        raise Http404
-    #ここで確認を入れたい
+    else:
+        print("不正なアクセスです！")
+        return redirect('nippou_app:show')
+
     return redirect('nippou_app:mypage')
 
 @login_required(login_url='/accounts/login')
 def show(request):
+
+    """
+    日報一覧を表示する
+    """
 
     #公開にチェックがはいっているもののみ最新のものから順に表示
     nippous_tmp = nippou_data.objects.all().order_by('-date')[:]
@@ -95,6 +105,10 @@ def show(request):
 
 @login_required(login_url='/accounts/login')
 def mypage(request):
+
+    """
+    マイページを表示する
+    """
 
     #uname = request.user.username
     nippous_tmp = nippou_data.objects.all().order_by('-date')[:]
@@ -142,10 +156,12 @@ def login(request):
 
 @login_required(login_url='/accounts/login')
 def detail(request, id):
-    try:
-        nippou = nippou_data.objects.get(pk=id)
-    except nippou_data.DoesNotExist:
-        raise Http404
+
+    """
+    選択された日報の詳細を表示する
+    """
+
+    nippou = get_object_or_404(nippou_data, pk=id)
 
     task_all = Task.objects.all()
     tasks = []
@@ -158,7 +174,7 @@ def detail(request, id):
     # user check
     hide_edit = 0
     if nippou.user != request.user:
-        print("you can not edit!")
+        # 他人の日報は編集削除できないようにする
         hide_edit = 1
 
     return render_to_response('nippou_app/nippou_detail.html',
@@ -166,6 +182,11 @@ def detail(request, id):
 
 @login_required(login_url='/accounts/login')
 def search(request):
+
+   """
+   一覧から日報を検索する
+　 """
+
    form, nippou_ = None, []
    if request.method == 'GET':
        form = NippouSearchForm()
@@ -183,11 +204,16 @@ def search(request):
 @login_required(login_url='/accounts/login')
 def taskadd(request, id=None):
 
+    """
+   指定された日報にタスクを追加する
+　 """
+
     if id:
         nippou = get_object_or_404(nippou_data, pk=id)
         # user check
         if nippou.user != request.user:
-            return redirect('nippou_app:mypage')
+            print("不正なアクセスです！")
+            return redirect('nippou_app:show')
     # new
     else:
         nippou = nippou_data()#ここにあってよい?
@@ -214,10 +240,17 @@ def taskadd(request, id=None):
 @login_required(login_url='/accounts/login')
 def taskedit(request, id=None):
 
+    """
+   タスクを新規作成、または指定されたタスクを編集する
+　 """
+
     # edit
     if id:
         task = get_object_or_404(Task, pk=id)
         # user check
+        if task.nippou.user != request.user:
+            print("不正なアクセスです！")
+            return redirect('nippou_app:show')
     # new
     else:
         task = Task()
@@ -242,18 +275,33 @@ def taskedit(request, id=None):
 @login_required(login_url='/accounts/login')
 def taskdelete(request, id=None):
 
-    task = get_object_or_404(Task, pk=id)
-    task.delete()
-    #ここで確認を入れたい
+    """
+   指定されたタスクを削除する
+　 """
+    if id:
+        task = get_object_or_404(Task, pk=id)
+        # user check
+        if task.nippou.user == request.user:
+            #ここで確認を入れたい
+            task.delete()
+        else:
+            print("不正なアクセスです！")
+            return redirect('nippou_app:show')
+
     return redirect('nippou_app:mypage')
 
 @login_required(login_url='/accounts/login')
 def make(request, id=None):
 
+    """
+    日報をタスクから自動生成する
+　  """
+
     if id:
         nippou = get_object_or_404(nippou_data, pk=id)
         # user check
         if nippou.user != request.user:
+            print("不正なアクセスです！")
             return redirect('nippou_app:show')
     # new
     else:

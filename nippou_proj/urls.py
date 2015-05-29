@@ -36,9 +36,6 @@ urlpatterns = [
         {'template_name': 'nippou_app/login.html'}, name='login' ),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'template_name': 'nippou_app/logout.html'}, name='logout'),
-    #url(r'^$', login_required(TemplateView.as_view
-    #                         (template_name='nippou_app/login.html')),
-    #                           name="a"),  # showでOK?
 ]
 
 urlpatterns += staticfiles_urlpatterns()
