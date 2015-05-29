@@ -4,8 +4,6 @@
 このアプリは、日報作成のためのWebアプリ「タスクde日報」です。
 一日のタスクを管理でき、それを日報に反映できます。
 
-※　nippou_proj/settings.pyは諸事情のため.gitignoreしてます。リリース時に追加します
-
 ## イメージ図
 
 ![トップページ](./doc/images/top.png "トップページ")
@@ -103,6 +101,8 @@ python manage.py createsuperuser
 5. 姓／名と一番下の所属を入力
 6. 保存をクリック
 
+# settings.pyの修正
+* DATABASESの、USERとPASSWORDを、Postgresのユーザ名、パスワードを記入してください
 
 
 実行方法
