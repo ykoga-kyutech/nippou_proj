@@ -71,16 +71,13 @@ Pythonモジュール
 ===========
 
 ## DB作成
-PostgreSQLのデータベースを、Djangoのmanage.pyを使って作成します。
-nippou_projディレクトリに移動し、以下のコマンドを実行します。
-一番目のコマンドでnippou_proj/nippou_app/migrationsフォルダ内にファイルが自動生成されるので、そのファイル名を二番目のコマンドの引数としてください。
+PostgreSQLのデータベーステーブルを、Djangoのmanage.pyを使って作成します。
+nippou_projディレクトリに移動し、以下のコマンドを実行して、マイグレーションを行います。
 
 ```bash
 
-python manage.py makemigrations nippou_app
-python manage.py sqlmigrate nippou_app 0002
 python manage.py migrate
-python manage.py syncdb
+
 
 ```
 
@@ -100,7 +97,7 @@ python manage.py createsuperuser
 * このステップは行わなくてもアプリは動きますが、やっておくとユーザ情報が正しく表示されますのでお勧めです。
 
 1. 下の「実行方法」に従って、アプリを起動しておく
-2. http://172.0.0.1:8000/adminにアクセス
+2. http://127.0.0.1:8000/adminにアクセス
 3. ユーザ作成時に決めたID,パスワードでログイン
 4. Nippou_Appの「ユーザ」をクリックし、自分のユーザ名をクリック
 5. 姓／名と一番下の所属を入力
@@ -135,7 +132,7 @@ Quit the server with CONTROL-C.
 アプリ利用方法
 ========
 ## ログイン
-1. http://172.0.0.1:8000/nippou_app にWebブラウザでアクセスし、ユーザ作成時に決めたID,パスワードでログインしてください
+1. http://127.0.0.1:8000/nippou_app にWebブラウザでアクセスし、ユーザ作成時に決めたID,パスワードでログインしてください
 2. ログインに成功すれば、サイトトップページに移ります。ユーザ名が左上に表示されていることを確認してください
 
 ## 日報作成手順
@@ -151,3 +148,5 @@ Quit the server with CONTROL-C.
 4. 作成したタスクに、タスク名、Y：やったこと、W：わかったこと、T：次やることなどを書き込みます（業務中がおすすめ）
 5. 終業時など日報作成時に、マイページの自動日報作成ボタンを押して、日報のひな形を作ります。
 6. ひな形に修正を加えて、「公開」にチェックを入れ、確定ボタンを押します。トップページに作成した日報が表示されます。
+
+
